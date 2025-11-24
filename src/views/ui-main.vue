@@ -105,38 +105,19 @@ watch(tabs, (newTabs) => {
 </script>
 
 <template>
-  <el-container class="main-container">
-    <el-main class="centered-content">
-      <el-input v-model="input" placeholder="输入单词或文本" clearable size="large"
-                type="textarea" :autosize="{minRows: 2, maxRows: 4}"
-                maxlength="9999" :style="{ fontSize: '18px' }"
-      >
+  <el-input v-model="input" placeholder="输入单词或文本" clearable size="large"
+            type="textarea" :autosize="{minRows: 2, maxRows: 4}"
+            maxlength="9999" :style="{ fontSize: '18px' }">
 
-      </el-input>
+  </el-input>
 
-      <el-divider />
+  <el-divider />
 
-      <el-tabs v-model="activeTab" type="border-card" v-if="parsedResult && tabs.length > 0">
+  <el-tabs v-model="activeTab" type="border-card" v-if="parsedResult && tabs.length > 0">
 
-        <el-tab-pane v-for="tab in tabs" :key="tab.key" :label="tab.label" :name="tab.key">
-          {{ parsedResult[tab.key] }}
-        </el-tab-pane>
+    <el-tab-pane v-for="tab in tabs" :key="tab.key" :label="tab.label" :name="tab.key">
+      {{ parsedResult[tab.key] }}
+    </el-tab-pane>
 
-      </el-tabs>
-    </el-main>
-  </el-container>
+  </el-tabs>
 </template>
-
-<style scoped>
-.main-container {
-  height: 100vh; /* 或者使用 min-height: 100vh */
-}
-
-.centered-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /*max-width: 800px; !* 可选：限制最大宽度 *!*/
-  /*margin: 0 auto; !* 水平居中，如果你想要的话 *!*/
-}
-</style>
