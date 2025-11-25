@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 // import type { Ref } from 'vue'
-import { debounce } from 'lodash-es' // 或用其他 debounce 实现
+import { debounce } from 'lodash-es'
+import { useHistoryStore } from '@/stores/counter.ts' // 或用其他 debounce 实现
 // import type { AppConfig } from '@/utils/config.ts'
 
 // const appConfig = inject<Ref<AppConfig>>('app-config')
 // const url = appConfig?.value.base_url
+
+const historyStore = useHistoryStore()
 
 const input = ref('')
 const translationResponse = ref('')
@@ -13,6 +16,10 @@ const activeTab = ref('translation')
 
 // 用于取消请求的 AbortController
 let abortController: AbortController | null = null
+
+const setInput = (text: string) => {
+  input.value = text
+}
 
 // 解析结果数据, 实时响应.
 const parsedResult = computed(() => {
@@ -45,6 +52,12 @@ const sendToBackend = async (text: string) => {
     return
   }
 
+  if (historyStore.getSourceTexts().includes(text)) {
+    console.log(`历史记录命中: ${text}`)
+    translationResponse.value = historyStore.getTranslatedTextBySourceText(text)!
+    return
+  }
+
   if (abortController) {
     abortController.abort()
   }
@@ -65,6 +78,7 @@ const sendToBackend = async (text: string) => {
     if (response.ok) {
       const data = await response.json()
       translationResponse.value = data.result || JSON.stringify(data)
+      historyStore.add(text, translationResponse.value)
       return
     }
 
@@ -102,6 +116,14 @@ watch(tabs, (newTabs) => {
     activeTab.value = newTabs[0]!.key
   }
 }, { immediate: true })
+
+defineExpose({
+  setInput
+})
+
+// historyStore.add('nihao', '{ "label": "自动检测", "value": "auto-detect" }')
+// historyStore.add('你好', '{ "label": "自动检测", "value": "auto-detect" }')
+// historyStore.add('不对', '{ "label": "自动检测", "value": "auto-detect" }')
 </script>
 
 <template>
