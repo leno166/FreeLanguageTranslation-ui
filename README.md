@@ -1,8 +1,7 @@
 # FreeLanguageTranslation-ui
 
-## FreeLanguageTranslation Desktop App
-
-一个基于 Vue 3 + FastAPI + PyWebView 的跨平台桌面翻译应用，仿照有道翻译界面设计。
+> **FreeLanguageTranslation Desktop App:** 
+> 一个基于 Vue 3 + FastAPI + PyWebView 的跨平台桌面翻译应用，仿照有道翻译界面设计。
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Vue 3.3](https://img.shields.io/badge/Vue-3.3-4fc08d?logo=vue.js)](https://vuejs.org/)
