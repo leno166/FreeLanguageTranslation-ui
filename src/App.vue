@@ -2,6 +2,7 @@
 import { useSettingStore } from '@/stores/counter.ts'
 import { useDark, usePreferredDark } from '@vueuse/core'
 import { watch } from 'vue'
+import type { SettingConfigs } from '@/types/interfaces.ts'
 
 
 const settingStore = useSettingStore()
@@ -32,11 +33,29 @@ watch(preferredDark, (newVal: boolean) => {
     setTheme.value = newVal
   }
 })
+
+// 计算属性来安全地获取 API 键
+const apiKeys = Object.keys(window.pywebview.api)
+
+console.log('pywebview API available:', apiKeys)
+
+const configs: SettingConfigs = {
+  fontSize: settingStore.fontSize,
+  theme: settingStore.theme,
+  autoStart: settingStore.autoStart,
+  startMinimized: settingStore.startMinimized,
+  shortcuts: settingStore.shortcuts,
+  alwaysOnTop: settingStore.alwaysOnTop,
+  hide2trayOnClose: settingStore.hide2trayOnClose,
+  screen: settingStore.screen
+}
+
+settingStore.configUpdate(configs)
 </script>
 
 <template>
   <div id="app">
-    <!-- 路由出口，根据路由渲染不同的页面 -->
+     <!-- 路由出口，根据路由渲染不同的页面 -->
     <router-view />
   </div>
 </template>

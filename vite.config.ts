@@ -38,12 +38,12 @@ export default defineConfig({
     emptyOutDir: true, // 👈 显式允许清空外部目录
 
     // 确保资源路径正确
-    outDir: './ui-static',
+    outDir: '../../py_project/freeLanguageTranslation/ui',
     assetsDir: 'assets',
 
     assetsInlineLimit: 4096,
   },
 
   // 设置资源加载路径
-  base: '/ui/'
+  base: './'
 })

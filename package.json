@@ -35,6 +35,8 @@
     "jiti": "^2.6.1",
     "npm-run-all2": "^8.0.4",
     "prettier": "3.6.2",
+    "sharp": "^0.34.5",
+    "svgo": "^4.0.0",
     "typescript": "~5.9.0",
     "unplugin-auto-import": "^20.2.0",
     "unplugin-vue-components": "^30.0.0",

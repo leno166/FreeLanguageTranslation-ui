@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { watch } from 'vue'
 import { useSettingStore } from '@/stores/counter.ts'
-
+import { api, type Shortcut } from '@/types/interfaces.ts'
 
 const settingStore = useSettingStore()
 
@@ -14,22 +14,29 @@ watch(() => settingStore.autoStart, () => {
   settingStore.setAutoStart()
 })
 
+/* *** 这里不应该触发, 只要让他保存这个值就行.
 watch(() => settingStore.startMinimized, () => {
   settingStore.setStartMinimized()
-})
+})  */
 
 // 4. 快捷键
-
+watch(() => settingStore.shortcuts, (newVal) => {
+  console.log(newVal)
+})
 
 // 5. 主窗口
 watch(() => settingStore.alwaysOnTop, async () => {
   await settingStore.setAlwaysOnTop()
 })
 
-const closeToTray = ref(false)
+watch(() => settingStore.hide2trayOnClose, async () => {
+  await settingStore.setHide2trayOnClose()
+})
 
 // 6. 截屏模式
-const screenshotMode = ref('multi') // 'multi' | 'single'
+watch(() => settingStore.screen, async () => {
+  await settingStore.capture()
+})
 </script>
 
 <template>
@@ -66,7 +73,6 @@ const screenshotMode = ref('multi') // 'multi' | 'single'
   <el-card>
     <!-- 使用 Element Plus 的 scrollbar 组件 -->
     <el-scrollbar height="70vh">
-
       <!-- 1. 字号选择（改为 radio） -->
       <span style="font-size: 16px; font-weight: bold; ">字号选择</span>
       <span style="font-size: 12px; color: #999; margin-left: 8px;">影响查词和翻译结果</span>
@@ -110,7 +116,7 @@ const screenshotMode = ref('multi') // 'multi' | 'single'
             直接按键盘进行设置, 清空可取消快捷键</span>
       <el-form label-position="right" label-width="140px">
         <el-form-item v-for="item in settingStore.shortcuts" :key="item.id" :label="item.label">
-          <el-input v-model="item.value" size="small" style="width: 200px" />
+          <el-input v-model="item.value" size="small" style="width: 200px" disabled />
           <el-button style="margin-left: 8px" size="small">恢复默认</el-button>
         </el-form-item>
       </el-form>
@@ -121,7 +127,8 @@ const screenshotMode = ref('multi') // 'multi' | 'single'
         <el-form-item>
           <div style="display: flex; flex-direction: column; ">
             <el-checkbox v-model="settingStore.alwaysOnTop">启用主窗口总在最前面</el-checkbox>
-            <el-checkbox v-model="closeToTray">窗口关闭时最小化到系统托盘</el-checkbox>
+            <el-checkbox v-model="settingStore.hide2trayOnClose">窗口关闭时最小化到系统托盘
+            </el-checkbox>
           </div>
         </el-form-item>
       </el-form>
@@ -131,7 +138,7 @@ const screenshotMode = ref('multi') // 'multi' | 'single'
       <span style="font-size: 16px; font-weight: bold;">截屏翻译</span>
       <el-form>
         <el-form-item>
-          <el-radio-group v-model="screenshotMode">
+          <el-radio-group v-model="settingStore.screen">
             <div style="display: flex; flex-direction: column; ">
               <el-radio label="multi">多屏截图</el-radio>
               <el-radio label="single">单屏截图(仅截取鼠标指针所在的屏幕)</el-radio>
